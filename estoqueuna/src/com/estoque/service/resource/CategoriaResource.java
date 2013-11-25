@@ -2,6 +2,7 @@ package com.estoque.service.resource;
 
 import java.util.Set;
 
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -25,5 +26,12 @@ public class CategoriaResource {
 	@Produces("application/json")
 	public Categoria getCategoria(@PathParam("id") int id){
 		return  new CategoriaImpl().findById(id);
+	}
+
+	@DELETE
+	@Path("/{id}")
+	@Produces("application/json")
+	public void removerCategoria(@PathParam("id") int id){
+		new CategoriaImpl().delete(id);
 	}
 }

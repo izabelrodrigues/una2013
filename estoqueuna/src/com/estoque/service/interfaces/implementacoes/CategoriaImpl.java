@@ -28,8 +28,22 @@ public class CategoriaImpl implements Generic<Categoria> {
 	}
 
 	@Override
-	public void delete(Categoria cat) {
-
+	public void delete(int cod) {
+		Session sessao = null;
+		Transaction transacao = null;
+		try {
+			sessao = HibernateUtil.getSessionFactory().openSession();
+			transacao = sessao.beginTransaction();
+			sessao.delete(findById(cod));
+			transacao.commit();
+		} catch (HibernateException e) {
+			if (transacao != null) {
+				transacao.rollback();
+			}
+		} finally {
+			sessao.close();
+		}
+		
 	}
 
 	@Override

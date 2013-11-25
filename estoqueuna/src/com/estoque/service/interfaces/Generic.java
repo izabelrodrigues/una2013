@@ -13,7 +13,7 @@ public interface Generic<T> {
 	
 	public void save(T obj);
 	public T findById(int cod);
-	public void delete (T obj);
+	public void delete (int cod);
 	public void update(T obj);
 	public Set<T> listAll();
 	public int getCount(Set<T> list);
