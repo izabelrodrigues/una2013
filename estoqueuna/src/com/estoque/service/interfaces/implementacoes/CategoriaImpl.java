@@ -18,7 +18,22 @@ public class CategoriaImpl implements Generic<Categoria> {
 	private List<Categoria> categorias;
 
 	@Override
-	public void save(Categoria obj) {
+	public void save(Categoria cat) {
+		Session sessao = null;
+		Transaction transacao = null;
+
+		try {
+			sessao = HibernateUtil.getSessionFactory().openSession();
+			transacao = sessao.beginTransaction();
+			sessao.save(cat);
+			transacao.commit();
+		} catch (HibernateException e) {
+			if (transacao != null) {
+				transacao.rollback();
+			}
+		} finally {
+			sessao.close();
+		}
 
 	}
 
@@ -44,7 +59,7 @@ public class CategoriaImpl implements Generic<Categoria> {
 		} finally {
 			sessao.close();
 		}
-		
+
 	}
 
 	@Override
