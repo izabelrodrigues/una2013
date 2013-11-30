@@ -39,8 +39,27 @@ public class CategoriaImpl implements Generic<Categoria> {
 
 	@Override
 	public Categoria findById(int cod) {
-		Session sessao = HibernateUtil.getSessionFactory().openSession();
-		return (Categoria) sessao.load(Categoria.class, cod);
+		Session sessao = null;
+		Transaction transacao = null;
+		Categoria categoria = new Categoria();
+
+		try {
+			sessao = HibernateUtil.getSessionFactory().openSession();
+			transacao = sessao.beginTransaction();
+			categoria = (Categoria) sessao.get(Categoria.class,
+					new Integer(cod));
+			transacao.commit();
+
+		} catch (HibernateException e) {
+			if (transacao != null) {
+				transacao.rollback();
+			}
+		} finally {
+			sessao.close();
+		}
+
+		return categoria;
+
 	}
 
 	@Override

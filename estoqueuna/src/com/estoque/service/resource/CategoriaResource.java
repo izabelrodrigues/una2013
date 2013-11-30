@@ -33,7 +33,7 @@ public class CategoriaResource {
 	}
 	
 	@DELETE
-	@Path("/{id}")
+	@Path("/remove/{id}")
 	@Produces("application/json")
 	public void removeCategoria(@PathParam("id") int id){
 		new CategoriaImpl().delete(id);
