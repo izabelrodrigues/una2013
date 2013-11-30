@@ -1,9 +1,10 @@
 package com.estoque.service.resource;
 
-import java.util.Set;
+import java.util.List;
 
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -11,13 +12,14 @@ import javax.ws.rs.Produces;
 import com.estoque.service.entity.Categoria;
 import com.estoque.service.interfaces.implementacoes.CategoriaImpl;
 
-@Path("/categoria")
+@Path("/categorias")
 public class CategoriaResource {
 
+	
 	@GET
-	@Path("/listar")
+	@Path("/list")
 	@Produces("application/json")
-	public Set<Categoria> listAll(){
+	public List<Categoria> listAll(){
 		return new CategoriaImpl().listAll();
 	}
 	
@@ -27,11 +29,17 @@ public class CategoriaResource {
 	public Categoria getCategoria(@PathParam("id") int id){
 		return  new CategoriaImpl().findById(id);
 	}
-
+	
 	@DELETE
 	@Path("/{id}")
 	@Produces("application/json")
-	public void removerCategoria(@PathParam("id") int id){
+	public void removeCategoria(@PathParam("id") int id){
 		new CategoriaImpl().delete(id);
+	}
+	
+	@PUT
+	@Path("/update")
+	public void updateCategoria(Categoria cat){
+		new CategoriaImpl().update(cat);
 	}
 }
