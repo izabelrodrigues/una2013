@@ -9,6 +9,7 @@ import org.hibernate.Transaction;
 import org.hibernate.classic.Session;
 import org.hibernate.criterion.Order;
 
+import com.estoque.service.Constants;
 import com.estoque.service.entity.Categoria;
 import com.estoque.service.interfaces.Generic;
 import com.estoque.service.util.HibernateUtil;
@@ -17,8 +18,8 @@ public class CategoriaImpl implements Generic<Categoria> {
 
 	private List<Categoria> categorias;
 
-	@Override
-	public void save(Categoria cat) {
+	@Override 
+	public String save(Categoria cat) {
 		Session sessao = null;
 		Transaction transacao = null;
 
@@ -27,13 +28,17 @@ public class CategoriaImpl implements Generic<Categoria> {
 			transacao = sessao.beginTransaction();
 			sessao.save(cat);
 			transacao.commit();
+
 		} catch (HibernateException e) {
 			if (transacao != null) {
 				transacao.rollback();
 			}
+			return Constants.ERROR;
 		} finally {
 			sessao.close();
 		}
+
+		return Constants.SUCCESS;
 
 	}
 
@@ -63,7 +68,7 @@ public class CategoriaImpl implements Generic<Categoria> {
 	}
 
 	@Override
-	public void delete(int cod) {
+	public String delete(int cod) {
 		Session sessao = null;
 		Transaction transacao = null;
 		try {
@@ -75,14 +80,17 @@ public class CategoriaImpl implements Generic<Categoria> {
 			if (transacao != null) {
 				transacao.rollback();
 			}
+			return Constants.ERROR;
 		} finally {
 			sessao.close();
 		}
 
+		return Constants.SUCCESS;
+
 	}
 
 	@Override
-	public void update(Categoria cat) {
+	public String update(Categoria cat) {
 		Session sessao = null;
 		Transaction transacao = null;
 		try {
@@ -94,15 +102,19 @@ public class CategoriaImpl implements Generic<Categoria> {
 			if (transacao != null) {
 				transacao.rollback();
 			}
+
+			return Constants.ERROR;
 		} finally {
 			sessao.close();
 		}
+
+		return Constants.SUCCESS;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Categoria> listAll() {
-		Session sessao = null;
+		/*Session sessao = null;
 		Transaction transacao = null;
 		categorias = new ArrayList<Categoria>();
 		try {
@@ -120,12 +132,58 @@ public class CategoriaImpl implements Generic<Categoria> {
 			sessao.close();
 		}
 
-		return categorias;
+		return categorias;*/
+		Session session = HibernateUtil.getSessionFactory().openSession();
+        return session.createCriteria(Categoria.class).list();
 	}
+	
+	public List<Categoria> list(int page, int start, int limit){
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		final Criteria criteria = session.createCriteria(Categoria.class);
+		criteria.setFirstResult(start);
+		criteria.setMaxResults(limit);
+		criteria.addOrder(Order.asc("id"));
+		return categorias = criteria.list();
+	}
+	
 
 	@Override
 	public int getCount(List<Categoria> list) {
 		return list.size();
+	}
+	
+	
+	public void deleteList(List<Integer> listCod) {
+		Session sessao = null;
+		Transaction transacao = null;
+		/*try {
+			sessao = HibernateUtil.getSessionFactory().openSession();
+			transacao = sessao.beginTransaction();
+			for (Integer integer : listCod) {
+				
+				sessao.delete(load);
+				transacao.commit();
+			}
+		} catch (HibernateException e) {
+			if (transacao != null) {
+				transacao.rollback();
+			}
+			return Constants.ERROR;
+		} finally {
+			sessao.close();
+		}
+*/
+		sessao = HibernateUtil.getSessionFactory().openSession();
+		Categoria categoria = new Categoria();
+		for (Integer cod : listCod) {
+			
+			transacao = sessao.beginTransaction();
+			categoria = (Categoria) sessao.get(Categoria.class,
+					new Integer(cod));
+			sessao.delete(categoria);
+			transacao.commit();
+		}
+
 	}
 
 }

@@ -10,13 +10,13 @@ import java.util.List;
  */
 public interface Generic<T> {
 
-	public void save(T obj);
+	public String save(T obj);
 
 	public T findById(int cod);
 
-	public void delete(int cod);
+	public String delete(int cod);
 
-	public void update(T obj);
+	public String update(T obj);
 
 	public List<T> listAll();
 

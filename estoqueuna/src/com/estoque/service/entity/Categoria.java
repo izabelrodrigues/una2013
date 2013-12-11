@@ -1,9 +1,13 @@
 package com.estoque.service.entity;
 
+import java.util.Collection;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -18,6 +22,9 @@ public class Categoria {
 	private int id;
 	@Column(name="DESCRICAO")
 	private String descricao;
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy="categoriaProduto")
+	private Collection<Produto> produtos ;
 
 	public int getId() {
 		return id;
